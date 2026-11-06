@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Source/">
+    <Project Path="Source/DummyWebAPI.Core/DummyWebAPI.Core.csproj" />
+    <Project Path="Source/DummyWebAPI.Service/DummyWebAPI.Service.csproj" />
+    <Project Path="Source/DummyWebAPI/DummyWebAPI.csproj" />
+  </Folder>
+  <Folder Name="/Test/">
+    <Project Path="Test/DummyWebAPI.Service.UnitTests/DummyWebAPI.Service.UnitTests.csproj" />
+  </Folder>
+</Solution>
