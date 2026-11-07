@@ -1,4 +1,5 @@
-﻿using DummyWebAPI.Core.Models;
+﻿using DummyWebAPI.Core;
+using DummyWebAPI.Core.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace DummyWebAPI.Service
@@ -97,7 +98,7 @@ namespace DummyWebAPI.Service
                     ID = i,
                     Brand = GetRandomEnumValue<MotorcycleBrand>(),
                     Model = "RandomModelNumber",
-                    ManufactoringYear = Random.Shared.Next(1950, 2027),
+                    ManufactoringYear = Random.Shared.Next(Constants.ManifacturingYear.MIN, Constants.ManifacturingYear.MAX + 1),
                     Color = GetRandomEnumValue<Color>(),
                     Category = GetRandomEnumValue<Category>(),
                     EngineType = GetRandomEnumValue<EngineType>(),

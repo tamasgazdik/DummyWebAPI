@@ -4,6 +4,7 @@ using Moq;
 
 namespace DummyWebAPI.Service.UnitTests
 {
+    [TestFixture]
     public class MotorcycleServiceTests
     {
         private static MotorcycleService motorcycleService;
