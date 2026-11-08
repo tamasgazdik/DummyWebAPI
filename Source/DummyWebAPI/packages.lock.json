@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "Microsoft.AspNetCore.OpenApi": {
+        "type": "Direct",
+        "requested": "[10.0.13, )",
+        "resolved": "10.0.13",
+        "contentHash": "XVuqUBGjVUVyb4DXR5BrSkrW0Br7sYKq39f723ILhQLlFHCyhAgWe1PkJBc42R/5mKBIgHiKVSY+PN5/4XtcQw==",
+        "dependencies": {
+          "Microsoft.OpenApi": "[2.12.2, 3.0.0)"
+        }
+      },
+      "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+        "type": "Direct",
+        "requested": "[1.24.2-preview.1, )",
+        "resolved": "1.24.2-preview.1",
+        "contentHash": "flsFB9rqlNTeehwCpFTi9gy3IfNLYs3l+jg+Gf7AvJVOa7FHDYST4x1eBG8QU/Q4eZPjBb+LNDlrLtM2EwonAQ=="
+      },
+      "Microsoft.OpenApi": {
+        "type": "Transitive",
+        "resolved": "2.12.2",
+        "contentHash": "ZkT7qiJe0Kj0+DTZOZo+xrDy1kNmdsWFQVPIQLNx9ZJ0T9cB2LG7r+Bi60so8/+yg1nkS7QCPadrzsTG4VPKrA=="
+      },
+      "dummywebapi.core": {
+        "type": "Project"
+      },
+      "dummywebapi.service": {
+        "type": "Project",
+        "dependencies": {
+          "DummyWebAPI.Core": "[1.0.0, )"
+        }
+      }
+    }
+  }
+}
