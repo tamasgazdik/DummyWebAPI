@@ -8,22 +8,32 @@ namespace DummyWebAPI.Service
     {
         private IEnumerable<Motorcycle> motorcycles = new List<Motorcycle>();
 
+        private int currentID = 0;
+
         private readonly IMotorcycleDTOValidator motorcycleDTOValidator;
 
         public MotorcycleService(
             IConfiguration configuration,
             IMotorcycleDTOValidator motorcycleDTOValidator)
         {
-            if (int.TryParse(configuration.GetSection("NumberOfMotorcyclesToStartWith").Value, out int numberOfMotorcyclesToStartWith))
+            this.motorcycleDTOValidator = motorcycleDTOValidator;
+
+            // if the configured value is a positive number, then we go with that one.
+            // if it's zero, then we'll have no motorcycles in the list to start with.
+            // otherwise we'll start with a default of 5 motorcycles in the list.
+            if (int.TryParse(configuration.GetSection("NumberOfMotorcyclesToStartWith").Value, out int numberOfMotorcyclesToStartWith) &&
+                numberOfMotorcyclesToStartWith > 0)
             {
                 InitializeMotorcyclesList(numberOfMotorcyclesToStartWith);
+            }
+            else if (numberOfMotorcyclesToStartWith == 0) 
+            {
+                return;
             }
             else
             {
                 InitializeMotorcyclesList(5);
             }
-
-            this.motorcycleDTOValidator = motorcycleDTOValidator;
         }
 
         public Task<MotorcycleDTO?> GetMotorcycleAsync(int ID, CancellationToken cancellationToken = default)
@@ -47,13 +57,11 @@ namespace DummyWebAPI.Service
         {
             if (IsValidMotorcycleDTO(motorcycleDTO))
             {
-                var calculatedID = motorcycles.Count() + 1;
-                
-                var motorcycle = Motorcycle.CreateMotorcycleFromDTO(motorcycleDTO, calculatedID);
+                var motorcycle = Motorcycle.CreateMotorcycleFromDTO(motorcycleDTO, ++currentID);
                 
                 motorcycles = motorcycles.Append(motorcycle);
 
-                return Task.FromResult(calculatedID);
+                return Task.FromResult(currentID);
             }
             else
             {
@@ -113,6 +121,7 @@ namespace DummyWebAPI.Service
                 };
 
                 motorcycles = motorcycles.Append(motorcycle);
+                currentID++;
             }
         }
 

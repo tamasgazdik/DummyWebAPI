@@ -7,16 +7,16 @@ namespace DummyWebAPI.Service.UnitTests
     [TestFixture]
     public class MotorcycleServiceTests
     {
-        private static MotorcycleService motorcycleService;
+        private MotorcycleService motorcycleService;
 
         private const int NUMBER_OF_MOTORCYCLES = 5;
 
-        private static Mock<IMotorcycleDTOValidator> motorcycleDTOValidatorMock;
+        private Mock<IMotorcycleDTOValidator> motorcycleDTOValidatorMock;
 
-        private static Mock<IConfiguration> configurationMock;
+        private Mock<IConfiguration> configurationMock;
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        [SetUp]
+        public void Setup()
         {
             configurationMock = new Mock<IConfiguration>();
 
@@ -24,11 +24,7 @@ namespace DummyWebAPI.Service.UnitTests
             configurationSectionMock.Setup(cSM => cSM.Value).Returns(NUMBER_OF_MOTORCYCLES.ToString());
 
             configurationMock.Setup(cM => cM.GetSection(It.IsAny<string>())).Returns(configurationSectionMock.Object);
-        }
 
-        [SetUp]
-        public void Setup()
-        {
             motorcycleDTOValidatorMock = new Mock<IMotorcycleDTOValidator>();
             motorcycleDTOValidatorMock.Setup(m => m.IsValid(It.IsAny<MotorcycleDTO>())).Returns(true);
 
