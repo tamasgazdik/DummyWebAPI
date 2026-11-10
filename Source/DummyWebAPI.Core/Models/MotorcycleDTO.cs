@@ -1,5 +1,8 @@
-﻿namespace DummyWebAPI.Core.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DummyWebAPI.Core.Models
 {
+    [ExcludeFromCodeCoverage]
     public class MotorcycleDTO
     {
         public MotorcycleBrand Brand { get; set; }

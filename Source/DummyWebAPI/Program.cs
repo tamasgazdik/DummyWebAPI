@@ -1,9 +1,11 @@
 
 using DummyWebAPI.Service;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace DummyWebAPI
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)

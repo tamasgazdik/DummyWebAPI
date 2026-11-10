@@ -1,5 +1,8 @@
-﻿namespace DummyWebAPI.Core
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DummyWebAPI.Core
 {
+    [ExcludeFromCodeCoverage]
     public static class Constants
     {
         public static class ManifacturingYear
