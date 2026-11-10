@@ -55,14 +55,27 @@ jobs:
           dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}/scanner
 
       # build the .NET application with SonarQube analysis
-      - name: Build
+      - name: Install dotnet-coverage
         run: |
-          ${{ runner.temp }}/scanner/dotnet-sonarscanner begin /k:"tamasgazdik_DummyWebAPI" /o:"tamasgazdik" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          dotnet build --configuration Release --no-restore
-          ${{ runner.temp }}/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          mkdir -p ${{ runner.temp }}/tools
+          dotnet tool install dotnet-coverage --tool-path ${{ runner.temp }}/tools
 
-      - name: Test
-        run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --verbosity normal
+      - name: Build, test and analyze with SonarQube
+        run: |
+          ${{ runner.temp }}/scanner/dotnet-sonarscanner begin \
+            /k:"tamasgazdik_DummyWebAPI" \
+            /o:"tamasgazdik" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          
+          dotnet build --configuration Release --no-restore
+          
+          ${{ runner.temp }}/tools/dotnet-coverage collect \
+            'dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --verbosity normal' \
+            -f xml \
+            -o coverage.xml
+
+          ${{ runner.temp }}/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Publish
         run: dotnet publish ./Source/DummyWebAPI/DummyWebAPI.csproj --configuration Release --no-build --output ./publish
