@@ -67,7 +67,7 @@ jobs:
             /o:"tamasgazdik" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
-            /d:sonar.coverage.exclusions="**/*.xml,**/*.json,**/*.yml,**/*.yaml,**/Program.cs
+            /d:sonar.coverage.exclusions="**/*.xml,**/*.json,**/*.yml,**/*.yaml,**/Program.cs"
           
           dotnet build --configuration Release --no-restore
           
