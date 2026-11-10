@@ -11,6 +11,8 @@ namespace DummyWebAPI.Service.UnitTests
 
         private const int NUMBER_OF_MOTORCYCLES = 5;
 
+        private static Mock<IMotorcycleDTOValidator> motorcycleDTOValidatorMock;
+
         private static Mock<IConfiguration> configurationMock;
 
         [OneTimeSetUp]
@@ -27,7 +29,10 @@ namespace DummyWebAPI.Service.UnitTests
         [SetUp]
         public void Setup()
         {
-            motorcycleService = new MotorcycleService(configurationMock.Object);
+            motorcycleDTOValidatorMock = new Mock<IMotorcycleDTOValidator>();
+            motorcycleDTOValidatorMock.Setup(m => m.IsValid(It.IsAny<MotorcycleDTO>())).Returns(true);
+
+            motorcycleService = new MotorcycleService(configurationMock.Object, motorcycleDTOValidatorMock.Object);
         }
 
         [Test]
@@ -67,7 +72,7 @@ namespace DummyWebAPI.Service.UnitTests
         }
 
         [Test]
-        public async Task CreateMotorcycleAsync_MotorcycleIsProvided_MotorcycleIsAdded()
+        public async Task CreateMotorcycleAsync_MotorcycleIsValid_MotorcycleIsAdded()
         {
             const MotorcycleBrand cfMoto = MotorcycleBrand.CFMoto;
             const string model = "Dummy Model";
@@ -96,6 +101,101 @@ namespace DummyWebAPI.Service.UnitTests
 
             // assert
             Assert.That(result, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void CreateMotorcycleAsync_MotorcycleIsInvalid_MotorcycleIsNotAdded()
+        {
+            // arrange
+            var motorcycleDTO = new MotorcycleDTO
+            {
+                Brand = MotorcycleBrand.CFMoto,
+                Model = string.Empty
+            };
+            motorcycleDTOValidatorMock.Setup(m => m.IsValid(motorcycleDTO)).Returns(false);
+
+            // act
+            var result = motorcycleService.CreateMotorcycleAsync(motorcycleDTO).Result;
+            
+            // assert
+            Assert.That(result, Is.EqualTo(-1));
+        }
+
+        [Test]
+        public void UpdateMotorcycleAsync_MotorcycleExistsAndIsValid_MotorcycleIsUpdated()
+        {
+            // arrange
+            var motorcycleDTO = new MotorcycleDTO
+            {
+                Brand = MotorcycleBrand.CFMoto,
+                Model = "Dummy Model"
+            };
+
+            // act
+            var result = motorcycleService.UpdateMotorcycleAsync(3, motorcycleDTO).Result;
+
+            // assert
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void UpdateMotorcycleAsync_MotorcycleExistsButIsInvalid_MotorcycleIsNotUpdated()
+        {
+            // arrange
+            var motorcycleDTO = new MotorcycleDTO
+            {
+                Brand = MotorcycleBrand.CFMoto,
+                Model = string.Empty
+            };
+
+            motorcycleDTOValidatorMock.Setup(m => m.IsValid(It.IsAny<MotorcycleDTO>())).Returns(false);
+
+            // act
+            var result = motorcycleService.UpdateMotorcycleAsync(3, motorcycleDTO).Result;
+            
+            // assert
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void UpdateMotorcycleAsync_MotorcycleDoesNotExist_ReturnsFalse()
+        {
+            // arrange
+            var motorcycleDTO = new MotorcycleDTO
+            {
+                Brand = MotorcycleBrand.CFMoto,
+                Model = "Dummy Model"
+            };
+
+            // act
+            var result = motorcycleService.UpdateMotorcycleAsync(999, motorcycleDTO).Result;
+
+            // assert
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void DeleteMotorcycleAsync_MotorcycleExists_MotorcycleIsDeleted()
+        {
+            // arrange
+
+            // act
+            var result = motorcycleService.DeleteMotorcycleAsync(3).Result;
+            
+            // assert
+            Assert.That(result, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void DeleteMotorcycleAsync_MotorcycleDoesNotExist_ReturnsMinusOne()
+        {
+            // arrange
+            
+            // act
+            var result = motorcycleService.DeleteMotorcycleAsync(999).Result;
+            
+            // assert
+            Assert.That(result, Is.EqualTo(-1));
         }
     }
 }

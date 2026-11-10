@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/Source/">
     <Project Path="Source/DummyWebAPI.Core/DummyWebAPI.Core.csproj" />
@@ -8,6 +9,7 @@
     <Project Path="Source/DummyWebAPI/DummyWebAPI.csproj" />
   </Folder>
   <Folder Name="/Test/">
+    <Project Path="DummyWebAPI.UnitTests/DummyWebAPI.UnitTests.csproj" Id="ffc3a2a7-4c7e-477c-8198-f9c52ed31ea3" />
     <Project Path="Test/DummyWebAPI.Service.UnitTests/DummyWebAPI.Service.UnitTests.csproj" />
   </Folder>
 </Solution>

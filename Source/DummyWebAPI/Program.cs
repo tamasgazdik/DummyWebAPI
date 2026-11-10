@@ -1,9 +1,11 @@
 
 using DummyWebAPI.Service;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace DummyWebAPI
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)
@@ -11,6 +13,7 @@ namespace DummyWebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddSingleton<IMotorcycleDTOValidator, MotorcycleDTOValidator>();
             builder.Services.AddSingleton<IMotorcycleService, MotorcycleService>();
 
             builder.Services

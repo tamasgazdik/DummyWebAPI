@@ -60,9 +60,9 @@ namespace DummyWebAPI.Controllers
             MotorcycleDTO motorcycleDTO,
             CancellationToken cancellationToken)
         {
-            var motorcycleById = await GetMotorcycleAsync(id, cancellationToken);
+            var actionResult = await GetMotorcycleAsync(id, cancellationToken);
 
-            if (motorcycleById == null)
+            if ((actionResult.Result as OkObjectResult)?.Value is not MotorcycleDTO)
             {
                 return NotFound();
             }

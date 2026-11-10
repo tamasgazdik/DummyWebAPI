@@ -1,5 +1,8 @@
-﻿namespace DummyWebAPI.Core.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DummyWebAPI.Core.Models
 {
+    [ExcludeFromCodeCoverage]
     public static class CommonDisplacement
     {
         public static readonly int[] Values = [
