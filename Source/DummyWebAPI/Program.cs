@@ -13,6 +13,7 @@ namespace DummyWebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddSingleton<IMotorcycleDTOValidator, MotorcycleDTOValidator>();
             builder.Services.AddSingleton<IMotorcycleService, MotorcycleService>();
 
             builder.Services

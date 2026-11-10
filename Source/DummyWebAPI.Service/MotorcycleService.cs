@@ -8,7 +8,11 @@ namespace DummyWebAPI.Service
     {
         private IEnumerable<Motorcycle> motorcycles = new List<Motorcycle>();
 
-        public MotorcycleService(IConfiguration configuration)
+        private readonly IMotorcycleDTOValidator motorcycleDTOValidator;
+
+        public MotorcycleService(
+            IConfiguration configuration,
+            IMotorcycleDTOValidator motorcycleDTOValidator)
         {
             if (int.TryParse(configuration.GetSection("NumberOfMotorcyclesToStartWith").Value, out int numberOfMotorcyclesToStartWith))
             {
@@ -18,6 +22,8 @@ namespace DummyWebAPI.Service
             {
                 InitializeMotorcyclesList(5);
             }
+
+            this.motorcycleDTOValidator = motorcycleDTOValidator;
         }
 
         public Task<MotorcycleDTO?> GetMotorcycleAsync(int ID, CancellationToken cancellationToken = default)
@@ -39,7 +45,7 @@ namespace DummyWebAPI.Service
 
         public Task<int> CreateMotorcycleAsync(MotorcycleDTO motorcycleDTO, CancellationToken cancellationToken = default)
         {
-            if (IsValidMotorcycle(motorcycleDTO))
+            if (IsValidMotorcycleDTO(motorcycleDTO))
             {
                 var calculatedID = motorcycles.Count() + 1;
                 
@@ -59,7 +65,7 @@ namespace DummyWebAPI.Service
         {
             var motorcycle = GetMotorcycleById(ID);
             if (motorcycle == null ||
-                !IsValidMotorcycle(motorcycleDTO))
+                !IsValidMotorcycleDTO(motorcycleDTO))
             {
                 return false;
             }
@@ -127,10 +133,9 @@ namespace DummyWebAPI.Service
             return motorcycles.FirstOrDefault(motorcycle => motorcycle.ID == ID);
         }
 
-        private static bool IsValidMotorcycle(MotorcycleDTO motorcycle)
+        private bool IsValidMotorcycleDTO(MotorcycleDTO motorcycle)
         {
-            // return true for now
-            return true;
+            return motorcycleDTOValidator.IsValid(motorcycle);
         }
     }
 }
