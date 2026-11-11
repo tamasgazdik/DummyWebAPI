@@ -14,4 +14,8 @@
     <ProjectReference Include="..\DummyWebAPI.Core\DummyWebAPI.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="DummyWebAPI.Service.UnitTests" />
+  </ItemGroup>
+
 </Project>

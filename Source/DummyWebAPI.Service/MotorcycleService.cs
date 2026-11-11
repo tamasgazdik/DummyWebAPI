@@ -6,6 +6,9 @@ namespace DummyWebAPI.Service
 {
     public sealed class MotorcycleService : IMotorcycleService
     {
+        // internal for testing purposes
+        internal static readonly int DEFAULT_NUMBER_OF_MOTORCYCLES = 5;
+
         private IEnumerable<Motorcycle> motorcycles = new List<Motorcycle>();
 
         private int currentID = 0;
@@ -32,7 +35,7 @@ namespace DummyWebAPI.Service
             }
             else
             {
-                InitializeMotorcyclesList(5);
+                InitializeMotorcyclesList(DEFAULT_NUMBER_OF_MOTORCYCLES);
             }
         }
 
@@ -90,17 +93,20 @@ namespace DummyWebAPI.Service
             return true;
         }
 
-        public async Task<int> DeleteMotorcycleAsync(int ID, CancellationToken cancellationToken = default)
+        // not using async because there is actually no need to make it async
+        // kept the method name for convention
+        // in a real-world scenario, this would be async because it would be a database call
+        public Task<int> DeleteMotorcycleAsync(int ID, CancellationToken cancellationToken = default)
         {
             var motorcycle = GetMotorcycleById(ID);
             if (motorcycle is null)
             {
-                return -1;
+                return Task.FromResult(-1);
             }
 
             motorcycles = motorcycles.Where(motorcycle => motorcycle.ID != ID);
 
-            return ID;
+            return Task.FromResult(ID);
         }
 
         private void InitializeMotorcyclesList(int numberOfMotorcyclesToInit)
