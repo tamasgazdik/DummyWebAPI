@@ -22,7 +22,8 @@ namespace DummyWebAPI.Core.Models
             1100,
             1200,
             1300,
-            1800
+            1800,
+            Constants.Displacement.MAX
         ];
     }
 }
