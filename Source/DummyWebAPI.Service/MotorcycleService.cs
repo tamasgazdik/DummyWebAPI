@@ -6,7 +6,12 @@ namespace DummyWebAPI.Service
 {
     public sealed class MotorcycleService : IMotorcycleService
     {
+        // internal for testing purposes
+        internal static readonly int DEFAULT_NUMBER_OF_MOTORCYCLES = 5;
+
         private IEnumerable<Motorcycle> motorcycles = new List<Motorcycle>();
+
+        private int currentID = 0;
 
         private readonly IMotorcycleDTOValidator motorcycleDTOValidator;
 
@@ -14,16 +19,24 @@ namespace DummyWebAPI.Service
             IConfiguration configuration,
             IMotorcycleDTOValidator motorcycleDTOValidator)
         {
-            if (int.TryParse(configuration.GetSection("NumberOfMotorcyclesToStartWith").Value, out int numberOfMotorcyclesToStartWith))
+            this.motorcycleDTOValidator = motorcycleDTOValidator;
+
+            // if the configured value is a positive number, then we go with that one.
+            // if it's zero, then we'll have no motorcycles in the list to start with.
+            // otherwise we'll start with a default of 5 motorcycles in the list.
+            if (int.TryParse(configuration.GetSection("NumberOfMotorcyclesToStartWith").Value, out int numberOfMotorcyclesToStartWith) &&
+                numberOfMotorcyclesToStartWith > 0)
             {
                 InitializeMotorcyclesList(numberOfMotorcyclesToStartWith);
             }
+            else if (numberOfMotorcyclesToStartWith == 0) 
+            {
+                return;
+            }
             else
             {
-                InitializeMotorcyclesList(5);
+                InitializeMotorcyclesList(DEFAULT_NUMBER_OF_MOTORCYCLES);
             }
-
-            this.motorcycleDTOValidator = motorcycleDTOValidator;
         }
 
         public Task<MotorcycleDTO?> GetMotorcycleAsync(int ID, CancellationToken cancellationToken = default)
@@ -47,13 +60,11 @@ namespace DummyWebAPI.Service
         {
             if (IsValidMotorcycleDTO(motorcycleDTO))
             {
-                var calculatedID = motorcycles.Count() + 1;
-                
-                var motorcycle = Motorcycle.CreateMotorcycleFromDTO(motorcycleDTO, calculatedID);
+                var motorcycle = Motorcycle.CreateMotorcycleFromDTO(motorcycleDTO, ++currentID);
                 
                 motorcycles = motorcycles.Append(motorcycle);
 
-                return Task.FromResult(calculatedID);
+                return Task.FromResult(currentID);
             }
             else
             {
@@ -82,17 +93,20 @@ namespace DummyWebAPI.Service
             return true;
         }
 
-        public async Task<int> DeleteMotorcycleAsync(int ID, CancellationToken cancellationToken = default)
+        // not using async because there is actually no need to make it async
+        // kept the method name for convention
+        // in a real-world scenario, this would be async because it would be a database call
+        public Task<int> DeleteMotorcycleAsync(int ID, CancellationToken cancellationToken = default)
         {
             var motorcycle = GetMotorcycleById(ID);
             if (motorcycle is null)
             {
-                return -1;
+                return Task.FromResult(-1);
             }
 
             motorcycles = motorcycles.Where(motorcycle => motorcycle.ID != ID);
 
-            return ID;
+            return Task.FromResult(ID);
         }
 
         private void InitializeMotorcyclesList(int numberOfMotorcyclesToInit)
@@ -113,6 +127,7 @@ namespace DummyWebAPI.Service
                 };
 
                 motorcycles = motorcycles.Append(motorcycle);
+                currentID++;
             }
         }
 

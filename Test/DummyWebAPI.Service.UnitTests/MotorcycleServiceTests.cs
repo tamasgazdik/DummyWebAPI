@@ -7,16 +7,16 @@ namespace DummyWebAPI.Service.UnitTests
     [TestFixture]
     public class MotorcycleServiceTests
     {
-        private static MotorcycleService motorcycleService;
+        private MotorcycleService motorcycleService;
 
-        private const int NUMBER_OF_MOTORCYCLES = 5;
+        private const int NUMBER_OF_MOTORCYCLES = 10;
 
-        private static Mock<IMotorcycleDTOValidator> motorcycleDTOValidatorMock;
+        private Mock<IMotorcycleDTOValidator> motorcycleDTOValidatorMock;
 
-        private static Mock<IConfiguration> configurationMock;
+        private Mock<IConfiguration> configurationMock;
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        [SetUp]
+        public void Setup()
         {
             configurationMock = new Mock<IConfiguration>();
 
@@ -24,15 +24,49 @@ namespace DummyWebAPI.Service.UnitTests
             configurationSectionMock.Setup(cSM => cSM.Value).Returns(NUMBER_OF_MOTORCYCLES.ToString());
 
             configurationMock.Setup(cM => cM.GetSection(It.IsAny<string>())).Returns(configurationSectionMock.Object);
-        }
 
-        [SetUp]
-        public void Setup()
-        {
             motorcycleDTOValidatorMock = new Mock<IMotorcycleDTOValidator>();
             motorcycleDTOValidatorMock.Setup(m => m.IsValid(It.IsAny<MotorcycleDTO>())).Returns(true);
 
             motorcycleService = new MotorcycleService(configurationMock.Object, motorcycleDTOValidatorMock.Object);
+        }
+
+        [Test]
+        public void Ctor_CorrectNumberOfMotorcyclesAreConfigured_MotorcyclesListIsInitialized()
+        {
+            // arrange
+            
+            // act
+            var result = motorcycleService.GetAllMotorcyclesAsync().Result;
+            
+            // assert
+            Assert.That(result, Has.Count.EqualTo(NUMBER_OF_MOTORCYCLES));
+        }
+
+        [Test]
+        public void Ctor_ZeroNumberOfMotorcyclesIsConfigured_MotorcyclesListIsEmpty()
+        {
+            // arrange
+            configurationMock.Setup(cM => cM.GetSection(It.IsAny<string>()).Value).Returns("0");
+
+            // act
+            var result = new MotorcycleService(configurationMock.Object, motorcycleDTOValidatorMock.Object);
+
+            // assert
+            Assert.That(result.GetAllMotorcyclesAsync().Result, Is.Empty);
+        }
+
+        [Test]
+        public void Ctor_NegativeNumberOfMotorcyclesIsConfigured_MotorcyclesListIsInitializedWithDefaultNumber()
+        {
+            // arrange
+            
+            configurationMock.Setup(cM => cM.GetSection(It.IsAny<string>()).Value).Returns("-1");
+            // act
+            
+            var result = new MotorcycleService(configurationMock.Object, motorcycleDTOValidatorMock.Object);
+            // assert
+            Assert.That(result.GetAllMotorcyclesAsync().Result, Has.Count.EqualTo(MotorcycleService.DEFAULT_NUMBER_OF_MOTORCYCLES));
         }
 
         [Test]
@@ -100,7 +134,7 @@ namespace DummyWebAPI.Service.UnitTests
             var result = await motorcycleService.CreateMotorcycleAsync(motorcycleDTO);
 
             // assert
-            Assert.That(result, Is.EqualTo(6));
+            Assert.That(result, Is.EqualTo(NUMBER_OF_MOTORCYCLES + 1));
         }
 
         [Test]

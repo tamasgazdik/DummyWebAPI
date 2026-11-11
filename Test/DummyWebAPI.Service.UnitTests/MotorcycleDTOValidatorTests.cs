@@ -79,11 +79,10 @@ namespace DummyWebAPI.Service.UnitTests
         [TestCase(-200)]
         [TestCase(0)]
         [TestCase(Constants.Displacement.MAX + 1)]
-        public void IsValid_DisplacementInCCIsInvalid_ReturnsFalse(int displacemenetInCC)
+        public void IsValid_DisplacementInCCIsInvalid_ReturnsFalse(int displacementInCC)
         {
             // arrange
-            motorcycleDTO.ManufactoringYear = displacemenetInCC;
-
+            motorcycleDTO.DisplacementInCC = displacementInCC;
 
             // act
             var validationResult = motorcycleDTOValidator.IsValid(motorcycleDTO);

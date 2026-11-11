@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Source\DummyWebAPI.Service\DummyWebAPI.Service.csproj" />
-    <ProjectReference Include="..\Source\DummyWebAPI\DummyWebAPI.csproj" />
+    <ProjectReference Include="..\..\Source\DummyWebAPI.Service\DummyWebAPI.Service.csproj" />
+    <ProjectReference Include="..\..\Source\DummyWebAPI\DummyWebAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
