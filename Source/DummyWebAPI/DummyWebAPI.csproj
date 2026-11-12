@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -16,5 +16,12 @@
   <ItemGroup>
     <ProjectReference Include="..\DummyWebAPI.Service\DummyWebAPI.Service.csproj" />
   </ItemGroup>
+
+  <!-- Docker configuration. For some reason launching 'Container (Dockerfile)' profile doesn't work as expected -->
+  <PropertyGroup>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfilePath>..\..\Dockerfile</DockerfilePath>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
 
 </Project>
