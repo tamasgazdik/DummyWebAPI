@@ -4,18 +4,20 @@
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
+EXPOSE 5000
+EXPOSE 5001
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["DummyWebAPI/DummyWebAPI.csproj", "DummyWebAPI/"]
-RUN dotnet restore "./DummyWebAPI/DummyWebAPI.csproj"
+COPY ["Directory.Build.props", "Directory.Packages.props", "./"]
+COPY ["Source/DummyWebAPI/DummyWebAPI.csproj", "Source/DummyWebAPI/"]
+COPY ["Source/DummyWebAPI.Core/DummyWebAPI.Core.csproj", "Source/DummyWebAPI.Core/"]
+COPY ["Source/DummyWebAPI.Service/DummyWebAPI.Service.csproj", "Source/DummyWebAPI.Service/"]
+RUN dotnet restore "Source/DummyWebAPI/DummyWebAPI.csproj"
 COPY . .
-WORKDIR "/src/DummyWebAPI"
+WORKDIR "/src/Source/DummyWebAPI"
 RUN dotnet build "./DummyWebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

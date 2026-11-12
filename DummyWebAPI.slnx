@@ -1,7 +1,9 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path="Dockerfile" />
   </Folder>
   <Folder Name="/Source/">
     <Project Path="Source/DummyWebAPI.Core/DummyWebAPI.Core.csproj" />
@@ -9,7 +11,7 @@
     <Project Path="Source/DummyWebAPI/DummyWebAPI.csproj" />
   </Folder>
   <Folder Name="/Test/">
-    <Project Path="Test/DummyWebAPI.UnitTests/DummyWebAPI.UnitTests.csproj" />
     <Project Path="Test/DummyWebAPI.Service.UnitTests/DummyWebAPI.Service.UnitTests.csproj" />
+    <Project Path="Test/DummyWebAPI.UnitTests/DummyWebAPI.UnitTests.csproj" />
   </Folder>
 </Solution>
