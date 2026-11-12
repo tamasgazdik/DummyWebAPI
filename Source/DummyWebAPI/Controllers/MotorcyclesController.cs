@@ -31,12 +31,13 @@ namespace DummyWebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MotorcycleDTO>>> GetMotorcyclesAsync(
+        public async Task<ActionResult<MotorcyclesResponse>> GetMotorcyclesAsync(
             CancellationToken cancellationToken)
         {
             var motorcycles = await motorcycleService.GetAllMotorcyclesAsync(cancellationToken);
 
-            return Ok(motorcycles);
+            var response = new MotorcyclesResponse(motorcycles.Count(), motorcycles);
+            return Ok(response);
         }
 
         [HttpPost]

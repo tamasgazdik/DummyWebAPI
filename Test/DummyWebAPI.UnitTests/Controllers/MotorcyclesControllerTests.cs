@@ -84,7 +84,10 @@ namespace DummyWebAPI.UnitTests.Controllers
 
             // assert
             Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
-            Assert.That((IEnumerable<MotorcycleDTO>)((OkObjectResult)result.Result).Value, Is.EquivalentTo(motorcycleDTOs));
+
+            var motorcyclesResponse = ((OkObjectResult)result.Result).Value as MotorcyclesResponse;
+            Assert.That(motorcyclesResponse!.NumberOfResults, Is.EqualTo(2));
+            Assert.That(motorcyclesResponse.Motorcycles, Is.EquivalentTo(motorcycleDTOs));
         }
 
         [Test]
@@ -99,7 +102,10 @@ namespace DummyWebAPI.UnitTests.Controllers
 
             // assert
             Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
-            Assert.That((IEnumerable<MotorcycleDTO>)((OkObjectResult)result.Result).Value, Is.Empty);
+
+            var motorcyclesResponse = ((OkObjectResult)result.Result).Value as MotorcyclesResponse;
+            Assert.That(motorcyclesResponse!.NumberOfResults, Is.EqualTo(0));
+            Assert.That(motorcyclesResponse.Motorcycles, Is.Empty);
         }
 
         [Test]
